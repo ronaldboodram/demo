@@ -1,0 +1,18 @@
+apiVersion: build.knative.dev/v1alpha1
+kind: Build
+metadata:
+  name: knative-app
+spec:
+  serviceAccountName: gsr-sa
+  source:
+    custom:
+        image: gcr.io/cloud-builders/gcloud:latest
+        args: ['source', 'repos', 'clone', 'demo-gke', '--project=gke-advance', '.']
+  steps:
+  - name: build-and-push
+    image: gcr.io/kaniko-project/executor:v0.1.0
+    args: ["--dockerfile=/workspace/DEMO/Dockerfile",
+           "--context=dir://workspace",
+           "--destination=gcr.io/gke-advance/demo-app:latest"]
+
+

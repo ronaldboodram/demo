@@ -1,0 +1,15 @@
+apiVersion: build.knative.dev/v1alpha1
+kind: Build
+metadata:
+  name: knative-app
+spec:
+  serviceAccountName: gsr-sa
+  source:
+    custom:
+        image: gcr.io/cloud-builders/gcloud:latest
+        args: ['source', 'repos', 'clone', 'demo-gke', '--project=gke-advance', '.']
+  steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/gke-advance/demo-app:$COMMIT_SHA', '/workspace/Dockerfile' ]
+    image: 'gcr.io/gke-advance/demo-app:$COMMIT_SHA'
+timeout: 3600s
